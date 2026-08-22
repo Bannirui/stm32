@@ -14,3 +14,9 @@ learn stm32, including HAL
   - 源文件放到cmsis下的Src
     - `STM32Cube_FW_F1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx`
     - 汇编的启动文件 `STM32Cube_FW_F1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/arm`
+
+## QUICK START
+
+```sh
+./build.sh
+```
