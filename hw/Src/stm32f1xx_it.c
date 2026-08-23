@@ -21,7 +21,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_it.h"
-   
+
+#include "stm32f1xx_hal_gpio.h"
+
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -160,7 +162,14 @@ void USARTx_IRQHandler(void)
   */
 void EXTI15_10_IRQHandler(void)
 {
-  /* HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN); */
+  // PC13的中断处理
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+}
+
+void EXTI0_IRQHandler(void)
+{
+  // PA0的中断处理
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
 }
 
 /**

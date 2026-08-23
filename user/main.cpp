@@ -17,12 +17,8 @@ int main() {
 
     led_init();
 
+    sw_init_it(0);
+
     while (1) {
-        // sw8按键被按下执行灯亮
-        switch (sw_scan(0)) {
-            case 8:
-                HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-                break;
-        }
     }
 }
