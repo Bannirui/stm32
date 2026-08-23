@@ -7,12 +7,12 @@
 
 void RccClock_Init() {
     RCC_OscInitTypeDef Rcc_OscInitType;
-    Rcc_OscInitType.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-    Rcc_OscInitType.HSIState = RCC_HSI_ON;
-    Rcc_OscInitType.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    Rcc_OscInitType.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    Rcc_OscInitType.HSEState = RCC_HSE_ON;
+    Rcc_OscInitType.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
     Rcc_OscInitType.PLL.PLLState = RCC_PLL_ON;
-    Rcc_OscInitType.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-    Rcc_OscInitType.PLL.PLLMUL = RCC_PLL_MUL16;
+    Rcc_OscInitType.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+    Rcc_OscInitType.PLL.PLLMUL = RCC_PLL_MUL9;
     HAL_RCC_OscConfig(&Rcc_OscInitType);
 
     // 时钟源

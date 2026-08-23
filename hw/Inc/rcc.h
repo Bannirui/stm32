@@ -5,6 +5,6 @@
 #pragma once
 
 /**
- * 使用内部HSI时钟源通过PLL倍频到64M
+ * 使用外部晶振通过PLL倍频到72M
  */
-void RccClock_Init(void);
+void RccClock_Init();
