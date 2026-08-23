@@ -4,8 +4,6 @@
 
 #include "led.h"
 
-#include <utility>
-
 #include "stm32f1xx_hal.h"
 
 void led_init() {
@@ -14,7 +12,7 @@ void led_init() {
 
     GPIO_InitTypeDef GPIO_InitType;
     GPIO_InitType.Pin = GPIO_PIN_13;
-    // 推挽
+    // 推挽输出
     GPIO_InitType.Mode = GPIO_MODE_OUTPUT_PP;
     // 驱动led不需要高频率
     GPIO_InitType.Speed = GPIO_SPEED_FREQ_LOW;

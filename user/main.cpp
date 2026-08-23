@@ -6,6 +6,7 @@
 
 #include "rcc.h"
 #include "led.h"
+#include "sw.h"
 
 int main() {
     // 必须最先调用
@@ -17,7 +18,11 @@ int main() {
     led_init();
 
     while (1) {
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-        HAL_Delay(1000);
+        // sw8按键被按下执行灯亮
+        switch (sw_scan(0)) {
+            case 8:
+                HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+                break;
+        }
     }
 }
