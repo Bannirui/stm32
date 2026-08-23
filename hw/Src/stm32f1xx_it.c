@@ -20,14 +20,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32f1xx_it.h"
    
 /** @addtogroup STM32F1xx_HAL_Examples
-  * @{
-  */
-
-/** @addtogroup UART_TwoBoards_ComIT
   * @{
   */
 
@@ -35,8 +30,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* UART handler declared in "main.c" file */
-extern UART_HandleTypeDef UartHandle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -157,7 +150,7 @@ void SysTick_Handler(void)
   */
 void USARTx_IRQHandler(void)
 {
-  HAL_UART_IRQHandler(&UartHandle);
+  /* HAL_UART_IRQHandler(&UartHandle); */
 }
 
 /**
@@ -167,7 +160,7 @@ void USARTx_IRQHandler(void)
   */
 void EXTI15_10_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);
+  /* HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN); */
 }
 
 /**

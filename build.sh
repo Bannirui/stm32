@@ -104,6 +104,11 @@ if [ ! "$(ls -A "${SCRIPT_DIR}/hw" 2>/dev/null)" ]; then
     mkdir -p "${SCRIPT_DIR}/hw/Inc" "${SCRIPT_DIR}/hw/Src"
     cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Inc/stm32f1xx_it.h" "${SCRIPT_DIR}/hw/Inc/"
     cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Src/stm32f1xx_it.c" "${SCRIPT_DIR}/hw/Src/"
+    # ST示例依赖其工程里的main.h/UartHandle/USER_BUTTON_PIN 本工程没有 裁剪掉
+    sed -i '/#include "main.h"/d' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
+    sed -i '/extern UART_HandleTypeDef UartHandle;/d' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
+    sed -i 's/HAL_UART_IRQHandler(&UartHandle);/\/\* HAL_UART_IRQHandler(\&UartHandle); \*\//' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
+    sed -i 's/HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);/\/\* HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN); \*\//' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
 fi
 
 # 链接脚本(和上面的启动文件/设备宏对应)
