@@ -25,6 +25,12 @@ int main() {
     // 按键 中断 PA0抬起触发
     sw11_it.initIt(Sw::Edge::Release, GPIO_PULLUP, 3);
 
+    // IO口锁定
+    HAL_GPIO_LockPin(GPIOA, GPIO_PIN_0);
+
+    // IO口复位 复位成浮空输入模式
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
+
     while (1) {
         led.toggleMs(1000);
         // sw8按键被按下执行灯亮
@@ -35,6 +41,7 @@ int main() {
             default:
                 break;
         }
+
         HAL_Delay(1000);
         // 软件触发中断
         __HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
