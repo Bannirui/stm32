@@ -37,7 +37,9 @@ Led::Led(GPIO_TypeDef *port, uint16_t pin)
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 }
 
-void Led::onOffMs(unsigned long ms) {
-    HAL_Delay(ms);
+void Led::toggleMs(unsigned long ms) {
+    if (ms>0) {
+        HAL_Delay(ms);
+    }
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 }

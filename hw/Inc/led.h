@@ -12,7 +12,7 @@ public:
 
     ~Led() = default;
 
-    void onOffMs(unsigned long ms);
+    void toggleMs(unsigned long ms);
 
 private:
     GPIO_TypeDef *port;

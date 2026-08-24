@@ -77,6 +77,7 @@ public:
      */
     void initIt(Edge mode, uint32_t pull, uint8_t priority);
 
+    // 处理中断
     void handleExti(uint16_t pin);
 };
 

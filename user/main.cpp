@@ -20,23 +20,23 @@ int main() {
 
     // 按键 扫描 PC13轮询
     sw8_scan.initInput(GPIO_PULLDOWN);
-    // 按键 中断PC13按下触发
+    // 按键 中断 PC13按下触发
     sw8_it.initIt(Sw::Edge::Press, GPIO_PULLDOWN, 4);
-    // 按键 中断 PA0按下触发
-    sw11_it.initIt(Sw::Edge::Press, GPIO_PULLUP, 3);
+    // 按键 中断 PA0抬起触发
+    sw11_it.initIt(Sw::Edge::Release, GPIO_PULLUP, 3);
 
     while (1) {
-        led.onOffMs(1000);
+        led.toggleMs(1000);
         // sw8按键被按下执行灯亮
         switch (sw8_scan.scan(Sw::Edge::Press)) {
             case SwScan::Result::Pressed:
-                HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+                led.toggleMs(0);
                 break;
             default:
                 break;
         }
-        //HAL_Delay(1000);
-        // 软件中断
-        //__HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
+        HAL_Delay(1000);
+        // 软件触发中断
+        __HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
     }
 }
