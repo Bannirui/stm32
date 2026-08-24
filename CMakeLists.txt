@@ -59,6 +59,7 @@ target_link_options(stm32 PRIVATE
         -mcpu=cortex-m3 -mthumb
         -T ${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT}
         -Wl,--gc-sections
+        --specs=nano.specs --specs=nosys.specs
 )
 
 # 生成hex和bin

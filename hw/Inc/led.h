@@ -4,4 +4,17 @@
 
 #pragma once
 
-void led_init();
+#include "stm32f103xb.h"
+
+class Led {
+public:
+    Led(GPIO_TypeDef *port, uint16_t pin);
+
+    ~Led() = default;
+
+    void onOffMs(unsigned long ms);
+
+private:
+    GPIO_TypeDef *port;
+    uint16_t pin;
+};
