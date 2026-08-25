@@ -9,8 +9,17 @@
 #include "sw.h"
 #include "uart.h"
 
-// uart一次接收200个字节
-#define RX_SIZE 200
+// uart收到什么返回什么
+class EchoUart : public Uart {
+public:
+    using Uart::Uart;
+
+    void onRxCplt() override {
+        // 收满len字节后原样返回 并重新开启中断接收
+        send(rxBuffer(), rxLen());
+        receiveIt(rxBuffer(), rxLen());
+    }
+};
 
 int main() {
     // 必须最先调用
@@ -35,10 +44,12 @@ int main() {
     // IO口复位 复位成浮空输入模式
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
 
-    // uart的缓冲区
-    uint8_t buf[1024];
     // 串口uart1
-    Uart uart1(USART1, 921600);
+    EchoUart uart1(USART1, 921600);
+
+    // 中断接收缓冲区 收满后回调onRxCplt
+    uint8_t echo_buf[64];
+    uart1.receiveIt(echo_buf, sizeof(echo_buf));
 
     while (1) {
         led.toggleMs(1000);
@@ -55,6 +66,10 @@ int main() {
         // 软件触发中断
         __HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
 
+        // uart1轮询方式的缓冲区
+        uint8_t buf[1024];
+        // uart1轮询方式每次接收多少字节数据
+#define RX_SIZE 200
         // uart收到什么返回什么
         switch (uart1.receive(buf, RX_SIZE, 500)) {
             case HAL_OK:

@@ -144,18 +144,6 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f1xx.s).                                               */
 /******************************************************************************/
 /**
-  * @brief  This function handles UART interrupt request.  
-  * @param  None
-  * @retval None
-  * @Note   This function is redefined in "main.h" and related to DMA  
-  *         used for USART data transmission     
-  */
-void USARTx_IRQHandler(void)
-{
-  /* HAL_UART_IRQHandler(&UartHandle); */
-}
-
-/**
   * @brief  This function handles external lines 10 to 15 interrupt request.
   * @param  None
   * @retval None
