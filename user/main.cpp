@@ -9,6 +9,8 @@
 #include "sw.h"
 #include "uart.h"
 
+uint8_t b_dma;
+
 int main() {
     // 必须最先调用
     HAL_Init();
@@ -32,19 +34,38 @@ int main() {
     // IO口复位 复位成浮空输入模式
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
 
-    // 串口uart1
-    Uart uart1(USART1, 921600);
-    // 启动中断接收 收到的字节自动写入环形缓冲
-    uart1.startRx();
+    // 轮询 阻塞接收 没有后台
+    UartBase uart1_poll(USART1, 115200);
+
+    // 中断 逐字节中断 自动进环形缓冲
+    UartInterrupt uart1_it(USART1, 921600);
+    uart1_it.startRx();
+
+    // DMA 环形DMA+空闲中断 自动进环形缓冲
+    UartDma uart1_dma(USART1, 921600);
+    uint8_t dma_buf[256];
+    uart1_dma.startRxDma(dma_buf, sizeof(dma_buf));
 
     // LED闪烁计数
     uint32_t ledTick = 0;
 
     while (1) {
         // uart收到什么返回什么
-        uint8_t b;
-        while (uart1.read(b)) {
-            uart1.send(&b, 1);
+        uint8_t b_poll;
+        uint8_t b_it;
+
+        // 轮询:阻塞等1字节 超时100ms
+        if (uart1_poll.receive(&b_poll, 1, 100) == HAL_OK) {
+            uart1_poll.send(&b_poll, 1);
+        }
+
+        // 中断/DMA:从环形缓冲取
+        while (uart1_it.read(b_it)) {
+            uart1_it.send(&b_it, 1);
+        }
+
+        while (uart1_dma.read(b_dma)) {
+            uart1_dma.send(&b_dma, 1);
         }
 
         // sw8按键被按下执行灯亮
