@@ -9,18 +9,6 @@
 #include "sw.h"
 #include "uart.h"
 
-// uart收到什么返回什么
-class EchoUart : public Uart {
-public:
-    using Uart::Uart;
-
-    void onRxCplt() override {
-        // 收满len字节后原样返回 并重新开启中断接收
-        send(rxBuffer(), rxLen());
-        receiveIt(rxBuffer(), rxLen());
-    }
-};
-
 int main() {
     // 必须最先调用
     HAL_Init();
@@ -45,14 +33,20 @@ int main() {
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
 
     // 串口uart1
-    EchoUart uart1(USART1, 921600);
+    Uart uart1(USART1, 921600);
+    // 启动中断接收 收到的字节自动写入环形缓冲
+    uart1.startRx();
 
-    // 中断接收缓冲区 收满后回调onRxCplt
-    uint8_t echo_buf[64];
-    uart1.receiveIt(echo_buf, sizeof(echo_buf));
+    // LED闪烁计数
+    uint32_t ledTick = 0;
 
     while (1) {
-        led.toggleMs(1000);
+        // uart收到什么返回什么
+        uint8_t b;
+        while (uart1.read(b)) {
+            uart1.send(&b, 1);
+        }
+
         // sw8按键被按下执行灯亮
         switch (sw8_scan.scan(Sw::Edge::Press)) {
             case SwScan::Result::Pressed:
@@ -62,29 +56,13 @@ int main() {
                 break;
         }
 
-        HAL_Delay(1000);
-        // 软件触发中断
-        __HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
-
-        // uart1轮询方式的缓冲区
-        uint8_t buf[1024];
-        // uart1轮询方式每次接收多少字节数据
-#define RX_SIZE 200
-        // uart收到什么返回什么
-        switch (uart1.receive(buf, RX_SIZE, 500)) {
-            case HAL_OK:
-                uart1.send(buf, RX_SIZE);
-                break;
-            case HAL_TIMEOUT: {
-                // 实际收到的字节数
-                uint16_t n = RX_SIZE - uart1.handlePtr()->RxXferCount;
-                if (n > 0) {
-                    uart1.send(buf, n);
-                }
-                break;
-            }
-            default:
-                break;
+        // LED每秒闪一次 用计数代替阻塞延时 保证串口回显及时
+        if (++ledTick % 1000 == 0) {
+            led.toggleMs(0);
+            // 软件触发中断
+            __HAL_GPIO_EXTI_GENERATE_SWIT(GPIO_PIN_13);
         }
+
+        HAL_Delay(1);
     }
 }
