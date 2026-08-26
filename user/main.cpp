@@ -50,6 +50,8 @@ int main() {
     uint32_t ledTick = 0;
 
     while (1) {
+        led.toggleMs(1000);
+
         // uart收到什么返回什么
         uint8_t b_poll;
         uint8_t b_it;
