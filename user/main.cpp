@@ -4,10 +4,13 @@
 
 #include "stm32f1xx_hal.h"
 
+#include <stdio.h>
+
 #include "rcc.h"
 #include "led.h"
 #include "sw.h"
 #include "uart.h"
+#include "dbg_printf.h"
 
 uint8_t b_dma;
 
@@ -36,6 +39,10 @@ int main() {
 
     // 轮询 阻塞接收 没有后台
     UartBase uart1_poll(USART1, 115200);
+
+    // 串口调试 printf/puts从这里输出
+    dbg_printf_init(&uart1_poll);
+    printf("uart1 init @ 115200\r\n");
 
     // 中断 逐字节中断 自动进环形缓冲
     UartInterrupt uart1_it(USART1, 921600);
