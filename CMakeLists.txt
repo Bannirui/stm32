@@ -91,7 +91,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         "${STM32_FW_ROOT}/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"
         "${STM32_FW_ROOT}/Drivers/CMSIS/Include"
         "${STM32_FW_ROOT}/Drivers/CMSIS/Device/ST/STM32F1xx/Include"
-        hw/Inc
+        hw
         user
 )
 

@@ -54,21 +54,21 @@ echo "ST package:  ${ST_MCU_PATH}"
 command -v cmake >/dev/null 2>&1 || { echo "ERROR: cmake not found. Install: sudo apt install cmake"; exit 1; }
 command -v arm-none-eabi-gcc >/dev/null 2>&1 || { echo "ERROR: arm-none-eabi-gcc not found. Install: sudo apt install gcc-arm-none-eabi"; exit 1; }
 
-# hw 下的中断文件(工程私有源码 正常应提交在git里)
+# hw下的中断文件(工程私有源码 正常应提交在git里)
 # 兜底:文件缺失时才从ST示例拷贝最小可编译版(功能阉割 无EXTI处理)并提示用git恢复完整版
-if [ ! -f "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c" ] || [ ! -f "${SCRIPT_DIR}/hw/Inc/stm32f1xx_it.h" ]; then
+if [ ! -f "${SCRIPT_DIR}/hw/stm32f1xx_it.c" ] || [ ! -f "${SCRIPT_DIR}/hw/stm32f1xx_it.h" ]; then
     echo "WARN: stm32f1xx_it files missing, copying fallback from ST example..."
-    mkdir -p "${SCRIPT_DIR}/hw/Inc" "${SCRIPT_DIR}/hw/Src"
-    cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Inc/stm32f1xx_it.h" "${SCRIPT_DIR}/hw/Inc/"
-    cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Src/stm32f1xx_it.c" "${SCRIPT_DIR}/hw/Src/"
+    mkdir -p "${SCRIPT_DIR}/hw"
+    cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Inc/stm32f1xx_it.h" "${SCRIPT_DIR}/hw/"
+    cp "${ST_MCU_PATH}/Projects/${BOARD_EXAMPLE}/Examples/UART/UART_TwoBoards_ComIT/Src/stm32f1xx_it.c" "${SCRIPT_DIR}/hw/"
     # ST示例依赖其工程里的main.h/UartHandle/USER_BUTTON_PIN 本工程没有 裁剪掉
-    sed -i '/#include "main.h"/d' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
-    sed -i '/extern UART_HandleTypeDef UartHandle;/d' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
-    sed -i 's/HAL_UART_IRQHandler(&UartHandle);/\/\* HAL_UART_IRQHandler(\&UartHandle); \*\//' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
-    sed -i 's/HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);/\/\* HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN); \*\//' "${SCRIPT_DIR}/hw/Src/stm32f1xx_it.c"
+    sed -i '/#include "main.h"/d' "${SCRIPT_DIR}/hw/stm32f1xx_it.c"
+    sed -i '/extern UART_HandleTypeDef UartHandle;/d' "${SCRIPT_DIR}/hw/stm32f1xx_it.c"
+    sed -i 's/HAL_UART_IRQHandler(&UartHandle);/\/\* HAL_UART_IRQHandler(\&UartHandle); \*\//' "${SCRIPT_DIR}/hw/stm32f1xx_it.c"
+    sed -i 's/HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);/\/\* HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN); \*\//' "${SCRIPT_DIR}/hw/stm32f1xx_it.c"
     echo "WARN: fallback written (basic IRQ handlers only)."
     echo "      For the full version (PC13/PA0 EXTI), restore from git:"
-    echo "      git restore hw/Src/stm32f1xx_it.c hw/Inc/stm32f1xx_it.h"
+    echo "      git restore hw/stm32f1xx_it.c hw/stm32f1xx_it.h"
 fi
 
 # build(启动文件/链接脚本由CMakeLists根据DEVICE_MACRO自动推导)

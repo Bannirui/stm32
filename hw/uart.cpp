@@ -5,8 +5,8 @@
 
 #include "uart.h"
 
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_it.h"
+#include <stm32f1xx_hal.h>
+#include <stm32f1xx_it.h>
 
 UartBase* UartBase::registry_[UartBase::kMaxUarts] = {};
 uint8_t UartBase::registryCount_ = 0;

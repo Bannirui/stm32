@@ -4,7 +4,7 @@
 
 #include "rcc.h"
 
-#include "stm32f1xx_hal.h"
+#include <stm32f1xx_hal.h>
 
 Rcc::Rcc(Source source) {
     // 振荡器

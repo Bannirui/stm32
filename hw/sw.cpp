@@ -4,7 +4,7 @@
 
 #include "sw.h"
 
-#include "stm32f1xx_hal.h"
+#include <stm32f1xx_hal.h>
 
 // 全局实例
 // PC13 扫描模式

@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-#include "stm32f103xb.h"
+#include <stm32f103xb.h>
 
 // 按键
 class Sw {
