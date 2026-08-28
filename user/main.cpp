@@ -2,7 +2,7 @@
 // Created by dingrui on 8/23/26.
 //
 
-#include "stm32f1xx_hal.h"
+#include <stm32f1xx_hal.h>
 
 #include <stdio.h>
 
@@ -11,6 +11,7 @@
 #include "sw.h"
 #include "uart.h"
 #include "dbg_printf.h"
+#include "timer.h"
 
 uint8_t b_dma;
 
@@ -56,7 +57,15 @@ int main() {
     // LED闪烁计数
     uint32_t ledTick = 0;
 
+    TimerTick tick(TIM2, 1000);
+    uint64_t lastMs = 0;
+    tick.start();
+
     while (1) {
+        if (tick.millis()-lastMs>=1000) {
+            lastMs = tick.millis();
+            // 1s钟时间
+        }
         led.toggleMs(1000);
 
         // uart收到什么返回什么
